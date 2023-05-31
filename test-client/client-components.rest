@@ -1,0 +1,55 @@
+#* Link Develop : https://challenge-06-develop.up.railway.app/
+#* Link Production : https://challenge-06-production-1d2a.up.railway.app/
+
+### TODO Get All
+GET http://localhost:3000/components
+
+### TODO Get Detail Components berdasarkan id
+GET http://localhost:3000/components/1
+
+### TODO Create data Components
+POST http://localhost:3000/components
+Content-Type: application/json
+
+{
+  "name": "Corn",
+  "description": "To make toppings"
+}
+
+### TODO Update data Components berdasarkan id
+PUT http://localhost:3000/components/4
+Content-Type: application/json
+
+{
+  "name": "Corn Asia",
+  "description": "To make toppings"
+}
+
+### TODO Delete data Components berdasarkan id
+DELETE http://localhost:3000/components/4
+
+# !-----------------------------------------------------!#
+# *------- end point untuk relasi ke supplier nya ------*#
+
+### TODO Menambahkan data supplier ke components nya
+POST http://localhost:3000/components/component-suppliers
+Content-Type: application/json
+
+{
+  "supplier_id": 1,
+  "component_id": 2
+}
+
+#TODO Update datanya berdasarkan id
+###
+PUT http://localhost:3000/components/component-suppliers/5
+Content-Type: application/json
+
+{
+  "supplier_id": 1,
+  "component_id": 1
+}
+
+#TODO Delete data berdasarkan id
+###
+DELETE http://localhost:3000/components/component-suppliers/5

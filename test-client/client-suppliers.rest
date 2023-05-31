@@ -1,0 +1,36 @@
+#* Link Develop : https://challenge-06-develop.up.railway.app/
+#* Link Production : https://challenge-06-production-1d2a.up.railway.app/
+
+GET http://localhost:3000
+
+#TODO Get All
+###
+GET http://localhost:3000/suppliers
+
+#TODO Get Detail berdasarkan id
+###
+GET http://localhost:3000/suppliers/1
+
+#TODO Create data
+###
+POST http://localhost:3000/suppliers
+Content-Type: application/json
+
+{
+  "name": "Corn Factory",
+  "address": "Bandung"
+}
+
+#TODO Update data berdasarkan id
+###
+PUT http://localhost:3000/suppliers/4
+Content-Type: application/json
+
+{
+  "name": "Corn Factory",
+  "address": "Jakarta"
+}
+
+#TODO Delete data berdasarkan id
+###
+DELETE http://localhost:3000/suppliers/4

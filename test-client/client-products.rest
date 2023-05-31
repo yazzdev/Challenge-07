@@ -1,0 +1,40 @@
+#* Link Develop : https://challenge-06-develop.up.railway.app/
+#* Link Production : https://challenge-06-production-1d2a.up.railway.app/
+
+### TODO TODO Get All
+GET http://localhost:3000/products
+
+### TODO Get Detail berdasarkan id
+GET http://localhost:3000/products/1
+
+### TODO Create data
+POST http://localhost:3000/products
+Content-Type: application/json
+
+{
+  "name": "Jasuke",
+  "quantity": 10,
+  "component_id": 2
+}
+
+### TODO Update data berdasarkan id
+PUT http://localhost:3000/products/8
+Content-Type: application/json
+
+{
+  "name": "Jasuke Crimy",
+  "quantity": 25,
+  "component_id": 2
+}
+
+### TODO Delete data berdasarkan id
+DELETE http://localhost:3000/products/4
+
+### TODO Update Product Components data berdasarkan id
+PUT http://localhost:3000/products/product-components/4
+Content-Type: application/json
+
+{
+  "product_id": 44,
+  "component_id": 1
+}

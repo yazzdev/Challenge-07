@@ -1,0 +1,1053 @@
+openapi: 3.0.0
+info:
+  title: Perusahaan Pabrikan
+  description: |-
+    Aplikasi RESTful API sederhana perusahaan manufaktur untuk mengelola produk tertentu.
+  contact:
+    name: Dyaz Amrullah
+    email: yaz@mail.com
+  version: 1.0.1
+servers:
+  - url: http://localhost:3000
+    description: Test di local computer
+tags:
+  - name: Supplier
+    description: Data Supplier
+  - name: Component
+    description: Data Component
+  - name: Product
+    description: Data Product
+paths:
+  /suppliers:
+    post:
+      tags:
+        - Supplier
+      summary: Menambahkan data Supplier
+      description: Menambahkan data Supplier untuk keperluan data pemasok komponen yang dibutuhkan.
+      operationId: post-supplier
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Corn Factory
+                address:
+                  type: string
+                  example: Bandung
+      responses:
+        "201":
+          description: Create Supplier Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Supplier added successfully
+                  data:
+                    $ref: "#/components/schemas/Supplier"
+        "400":
+          description: Error from user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Supplier Name and Address is required!
+                  data:
+                    type: object
+                    example: null
+    get:
+      tags:
+        - Supplier
+      summary: Menampilkan semua data supplier
+      description: Menampilkan semua data supplier (desc)
+      operationId: get-all-supplier
+      responses:
+        "200":
+          description: Show All Supplier Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Supplier"
+  /suppliers/{id}:
+    get:
+      tags:
+        - Supplier
+      summary: Menampilkan data supplier berdasarkan ID
+      description: Menampilkan data supplier berdasarkan ID yang diberikan.
+      operationId: get-supplier-by-id
+      parameters:
+        - name: id
+          in: path
+          description: ID dari supplier yang ingin ditampilkan.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "200":
+          description: Show Supplier by ID Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    $ref: "#/components/schemas/Supplier"
+        "404":
+          description: Supplier not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supplier_404"
+    put:
+      tags:
+        - Supplier
+      summary: Memperbarui data supplier berdasarkan ID
+      description: Memperbarui data supplier berdasarkan ID yang diberikan.
+      operationId: update-supplier-by-id
+      parameters:
+        - name: id
+          in: path
+          description: ID dari supplier yang ingin diperbarui.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Corn Factory
+                address:
+                  type: string
+                  example: Jakarta
+      responses:
+        "200":
+          description: Update Supplier Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Supplier updated successfully
+                  data:
+                    type: object
+                    example: null
+        "404":
+          description: Supplier not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supplier_404"
+    delete:
+      tags:
+        - Supplier
+      summary: Menghapus data supplier berdasarkan ID
+      description: Menghapus data supplier berdasarkan ID yang diberikan.
+      operationId: delete-supplier-by-id
+      parameters:
+        - name: id
+          in: path
+          description: ID dari supplier yang ingin dihapus.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "200":
+          description: Delete Supplier Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Supplier deleted successfully
+                  data:
+                    type: object
+                    example: null
+        "404":
+          description: Supplier not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Supplier_404"
+  /components:
+    post:
+      tags:
+        - Component
+      summary: Menambahkan data Component
+      description: Menambahkan data Component (desc)
+      operationId: post-component
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Corn
+                description:
+                  type: string
+                  example: To make toppings
+      responses:
+        "201":
+          description: Create Component Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Component added successfully
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: Corn
+                      description:
+                        type: string
+                        example: To make toppings
+        "400":
+          description: Error from user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Component Name and Description is required!
+                  data:
+                    type: object
+                    example: null
+    get:
+      tags:
+        - Component
+      summary: Menampilkan semua data component
+      description: Menampilkan semua data component (desc)
+      operationId: get-all-component
+      responses:
+        "200":
+          description: Show All Component Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: Corn
+                        description:
+                          type: string
+                          example: To make toppings
+                        componet_suppliers:
+                          $ref: "#/components/schemas/Component_supplier"
+  /components/{id}:
+    get:
+      tags:
+        - Component
+      summary: Menampilkan data component berdasarkan ID
+      description: Menampilkan data component berdasarkan ID (desc)
+      operationId: get-component-by-id
+      parameters:
+        - name: id
+          in: path
+          description: ID dari component yang ingin ditampilkan
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Show Component by ID Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: Corn
+                      description:
+                        type: string
+                        example: To make toppings
+                      componet_suppliers:
+                        $ref: "#/components/schemas/Component_supplier"
+        "404":
+          description: Component not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Component_404"
+    put:
+      tags:
+        - Component
+      summary: Memperbarui data component berdasarkan ID
+      description: Memperbarui data component berdasarkan ID (desc)
+      operationId: update-component-by-id
+      parameters:
+        - name: id
+          in: path
+          description: ID dari component yang ingin diperbarui
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Corn Mantap Jiwa
+                description:
+                  type: string
+                  example: To make toppings and other
+      responses:
+        "200":
+          description: Update Component Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Component updated successfully
+                  data:
+                    type: object
+                    example: null
+        "404":
+          description: Component not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Component_404"
+    delete:
+      tags:
+        - Component
+      summary: Menghapus data component berdasarkan ID
+      description: Menghapus data component berdasarkan ID (desc)
+      operationId: delete-component-by-id
+      parameters:
+        - name: id
+          in: path
+          description: ID dari component yang ingin dihapus
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Delete Component Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Component deleted successfully
+                  data:
+                    type: object
+                    example: null
+        "404":
+          description: Component not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Component_404"
+  /components/component-suppliers/:
+    post:
+      tags:
+        - Component
+      summary: Menambahkan supplier pada component
+      description: Menambahkan supplier pada component berdasarkan ID yang diberikan.
+      operationId: post-supplier-components
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                supplier_id:
+                  type: integer
+                  example: 1
+                component_id:
+                  type: integer
+                  example: 1
+      responses:
+        "201":
+          description: Add Component-Supplier Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      supplier_id:
+                        type: integer
+                        example: 1
+                      component_id:
+                        type: integer
+                        example: 2
+        "404":
+          description: Error not found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Component_404"
+                  - $ref: "#/components/schemas/Supplier_404"
+              examples:
+                component-not-found:
+                  summary: ID Component not found
+                  value:
+                    status: false
+                    message: Component not found!
+                    data: null
+                supplier-not-found:
+                  summary: ID Supplier not found
+                  value:
+                    status: false
+                    message: Component not found!
+                    data: null
+  /components/component-suppliers/{id}:
+    put:
+      tags:
+        - Component
+      summary: Memperbaharui data component-supplier
+      description: Memperbarui data supplier berdasarkan ID yang diberikan.
+      operationId: update-component-supplier
+      parameters:
+        - in: path
+          name: id
+          description: ID dari component-supplier yang akan di perbarui
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                supplier_id:
+                  type: integer
+                  example: 1
+                component_id:
+                  type: integer
+                  example: 1
+      responses:
+        "200":
+          description: Component-Supplier updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Component-Supplier updated successfully
+                  data:
+                    type: object
+                    example: null
+        "404":
+          description: Component-Supplier not found or related supplier or component not found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Component_supplier_404"
+                  - $ref: "#/components/schemas/Component_404"
+                  - $ref: "#/components/schemas/Supplier_404"
+              examples:
+                component-supplier-not-found:
+                  summary: ID Component-Supplier not found
+                  value:
+                    status: false
+                    message: Component-Supplier not found!
+                    data: null
+                component-not-found:
+                  summary: ID Component not found
+                  value:
+                    status: false
+                    message: Component not found!
+                    data: null
+                supplier-not-found:
+                  summary: ID Supplier not found
+                  value:
+                    status: false
+                    message: Supplier not found!
+                    data: null
+    delete:
+      tags:
+        - Component
+      summary: Menghapus data component-supplier berdasarkan ID
+      description: Menghapus data component-supplier berdasarkan ID (desc)
+      operationId: delete-component-supplier
+      parameters:
+        - name: id
+          in: path
+          description: ID dari component-supplier yang ingin dihapus
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Delete Component-Supplier Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Component-Supplier deleted successfully
+                  data:
+                    type: object
+                    example: null
+        "404":
+          description: Component-Supplier not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Component_supplier_404"
+  /products:
+    post:
+      tags:
+        - Product
+      summary: Menambahkan data Product
+      description: Menambahkan data Product (desc)
+      operationId: post-product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Jasuke
+                quantity:
+                  type: integer
+                  example: 100
+                component_id:
+                  type: integer
+                  example: 1
+      responses:
+        "201":
+          description: Create Product Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product added successfully
+                  data:
+                    type: object
+                    properties:
+                      product:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: Jasuke
+                          quantity:
+                            type: integer
+                            example: 100
+                          component_id:
+                            type: integer
+                            example: 1
+                      product_components:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          product_id:
+                            type: integer
+                            example: 2
+                          component_id:
+                            type: integer
+                            example: 1
+        "400":
+          description: Error from user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Product Name, quantity, and component_id is required!
+                  data:
+                    type: object
+                    example: null
+    get:
+      tags:
+        - Product
+      summary: Menampilkan semua data product
+      description: Menampilkan semua data product (desc)
+      operationId: get-all-products
+      responses:
+        "200":
+          description: Show All Products Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+  /products/{id}:
+    get:
+      tags:
+        - Product
+      summary: Menampilkan data Product berdasarkan ID
+      description: Menampilkan data product berdasarkan ID yang diberikan.
+      operationId: get-product-by-id
+      parameters:
+        - name: id
+          in: path
+          description: ID dari product yang ingin ditampilkan.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "200":
+          description: Show Product by ID Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: success
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+        "404":
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product_404"
+    put:
+      tags:
+        - Product
+      summary: Memperbarui data product berdasarkan ID
+      description: Memperbarui data product berdasarkan ID yang diberikan.
+      operationId: update-product-by-id
+      parameters:
+        - name: id
+          in: path
+          description: ID dari product yang ingin diperbarui.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Jasuke Crimy
+                quantity:
+                  type: integer
+                  example: 150
+                component_id:
+                  type: integer
+                  example: 1
+      responses:
+        "200":
+          description: Update Product Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product updated successfully
+                  data:
+                    type: object
+                    example: null
+        "404":
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product_404"
+    delete:
+      tags:
+        - Product
+      summary: Menghapus data product berdasarkan ID
+      description: Menghapus data product berdasarkan ID yang diberikan.
+      operationId: delete-product-by-id
+      parameters:
+        - name: id
+          in: path
+          description: ID dari product yang ingin dihapus.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      responses:
+        "200":
+          description: Delete Product Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product deleted successfully
+                  data:
+                    type: object
+                    example: null
+        "404":
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product_404"
+  /products/product-components/{id}:
+    put:
+      tags:
+        - Product
+      summary: Memperbarui data product-components
+      description: Memperbarui data product-components berdasarkan ID yang diberikan.
+      operationId: update-product-component
+      parameters:
+        - name: id
+          in: path
+          description: ID dari product-components yang ingin diperbarui.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_id:
+                  type: integer
+                  example: 4
+                component_id:
+                  type: integer
+                  example: 1
+      responses:
+        "200":
+          description: Update Product-Component Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product-Component updated successfully
+                  data:
+                    type: object
+                    example: null
+        "404":
+          description: Error not found
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: Product-Component not found!
+                      data:
+                        type: object
+                        example: null
+                  - $ref: "#/components/schemas/Product_404"
+                  - $ref: "#/components/schemas/Component_404"
+              examples:
+                product-component-not-found:
+                  summary: ID product_components not found
+                  value:
+                    status: false
+                    message: Product-Component not found!
+                    data: null
+                product-not-found:
+                  summary: ID Product not found
+                  value:
+                    status: false
+                    message: Product not found!
+                    data: null
+                component-not-found:
+                  summary: ID Component not found
+                  value:
+                    status: false
+                    message: Component not found!
+                    data: null
+components:
+  schemas:
+    Supplier:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Corn Factory
+        address:
+          type: string
+          example: Bandung
+    Supplier_404:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Supplier not Found!
+        data:
+          type: object
+          example: null
+    Component:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Corn
+        description:
+          type: string
+          example: To make toppings
+    Component_404:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Component not found!
+        data:
+          type: object
+          example: null
+    Component_supplier:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        suppliers:
+          $ref: "#/components/schemas/Supplier"
+    Component_supplier_404:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Component-Supplier not found!
+        data:
+          type: object
+          example: null
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Jasuke
+        quantity:
+          type: integer
+          example: 100
+        product_components:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product_component"
+    Product_component:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        components:
+          $ref: "#/components/schemas/Component"
+    Product_404:
+      type: object
+      properties:
+        status:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Product not found!
+        data:
+          type: object
+          example: null
