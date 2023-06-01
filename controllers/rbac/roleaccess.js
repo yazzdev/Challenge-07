@@ -3,8 +3,8 @@ const { Role, Module, RoleAccess } = require('../../models');
 module.exports = {
   store: async (req, res) => {
     try {
-      const { role_id, module_id, is_read, is_write } = req.body;
-      if (!role_id || !module_id || is_read == undefined || is_write == undefined) {
+      const { role_id, module_id, is_read, is_write, is_update, is_delete } = req.body;
+      if (!role_id || !module_id || is_read == undefined || is_write == undefined || is_update == undefined || is_delete == undefined) {
         return res.status(400).json({
           status: false,
           message: 'bad request!',
@@ -37,7 +37,7 @@ module.exports = {
         });
       }
 
-      const newRoleAccess = await RoleAccess.create({ role_id, module_id, is_read, is_write });
+      const newRoleAccess = await RoleAccess.create({ role_id, module_id, is_read, is_write, is_update, is_delete });
       return res.status(201).json({
         status: true,
         message: `role access created!`,
