@@ -51,8 +51,8 @@ module.exports = {
 
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeForeignKey('product_components', 'product_id');
-    await queryInterface.removeForeignKey('product_components', 'component_id');
+    // await queryInterface.removeConstraint('product_components', 'product_id');
+    // await queryInterface.removeConstraint('product_components', 'component_id');
     await queryInterface.dropTable('product_components');
   }
 };

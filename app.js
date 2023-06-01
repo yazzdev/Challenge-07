@@ -6,6 +6,7 @@ const router = require('./routes');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yaml');
 const fs = require('fs');
+const cors = require('cors');
 const Sentry = require('@sentry/node');
 
 const {
@@ -29,8 +30,10 @@ app.use(Sentry.Handlers.tracingHandler());
 const file = fs.readFileSync('./docs.yaml', 'utf8');
 const swaggerDocument = YAML.parse(file);
 
+app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(router);
 

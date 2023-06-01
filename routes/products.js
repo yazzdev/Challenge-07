@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { products } = require('../controllers');
+const { products } = require('../controllers/rbac');
 
 router.get('/', products.index);
 router.get('/:id', products.show);

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { components } = require('../controllers');
+const { components } = require('../controllers/rbac');
 
 router.get('/', components.index);
 router.get('/:id', components.show);
