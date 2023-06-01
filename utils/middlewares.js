@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const role = require('../controllers/rbac/role');
 const { JWT_SECRET_KEY } = process.env;
 const { Module, RoleAccess } = require('../models');
 
@@ -31,12 +30,11 @@ module.exports = {
     }
   },
 
-  rbac: (moduleName, is_read = false, is_write = false) => {
+  rbac: (moduleName, is_read = false, is_write = false, is_update = false, is_delete = false) => {
     return async (req, res, next) => {
       try {
-        // dapatkan role_id dari data user
         const { role_id } = req.user;
-        // validasi role_id
+
         if (!role_id) {
           return res.status(401).json({
             status: false,
@@ -45,7 +43,6 @@ module.exports = {
           });
         }
 
-        // cari module where name = moduleName
         const module = await Module.findOne({ where: { name: moduleName } });
         if (!module) {
           return res.status(401).json({
@@ -55,7 +52,6 @@ module.exports = {
           });
         }
 
-        // cari role access where role_id = role_id and module_id = module.id
         const roleAccess = await RoleAccess.findOne({ where: { module_id: module.id, role_id: role_id } });
         console.log(roleAccess);
         if (!roleAccess) return res.status(401).json({ status: false, message: 'you\'re not authorized!', data: null });
@@ -66,10 +62,16 @@ module.exports = {
         console.log('rbac write :', is_write);
         console.log('user write :', roleAccess.is_write);
 
+        console.log('rbac update :', is_update);
+        console.log('user update :', roleAccess.is_update);
 
-        // cocokkan isread dan iswrite yang ada di roleacess dengan parameter
+        console.log('rbac delete :', is_delete);
+        console.log('user delete :', roleAccess.is_delete);
+
         if (is_read && !roleAccess.is_read) return res.status(401).json({ status: false, message: 'you\'re not authorized!', data: null });
         if (is_write && !roleAccess.is_write) return res.status(401).json({ status: false, message: 'you\'re not authorized!', data: null });
+        if (is_update && !roleAccess.is_update) return res.status(401).json({ status: false, message: 'you\'re not authorized!', data: null });
+        if (is_delete && !roleAccess.is_delete) return res.status(401).json({ status: false, message: 'you\'re not authorized!', data: null });
 
         next();
       } catch (err) {
