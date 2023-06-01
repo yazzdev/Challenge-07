@@ -50,8 +50,8 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeForeignKey('component_suppliers', 'supplier_id');
-    await queryInterface.removeForeignKey('component_suppliers', 'component_id');
+    // await queryInterface.removeConstraint('component_suppliers', 'supplier_id');
+    // await queryInterface.removeConstraint('component_suppliers', 'component_id');
     await queryInterface.dropTable('component_suppliers');
   }
 };
