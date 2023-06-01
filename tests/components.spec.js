@@ -1,4 +1,4 @@
-const { components } = require('../controllers');
+const { components } = require('../controllers/rbac');
 const { truncateComponent } = require('../utils/truncate');
 
 const mockRequest = (body = {}, params = {}) => ({ body, params });
