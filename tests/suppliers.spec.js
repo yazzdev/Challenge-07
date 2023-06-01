@@ -1,4 +1,4 @@
-const { suppliers } = require('../controllers');
+const { suppliers } = require('../controllers/rbac');
 const { truncateSupplier } = require('../utils/truncate');
 
 const mockRequest = (body = {}, params = {}) => ({ body, params });

@@ -1,4 +1,4 @@
-const { products } = require('../controllers');
+const { products } = require('../controllers/rbac');
 const { Components, product_components } = require('../models');
 const { truncateProduct, truncateProductComponents } = require('../utils/truncate');
 
