@@ -66,5 +66,53 @@ module.exports = {
     } catch (error) {
       throw error;
     }
+  },
+
+  update: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const updated = await Module.update(req.body, { where: { id: id } });
+
+      if (updated[0] == 0) {
+        return res.status(404).json({
+          status: false,
+          message: `Module not found!`,
+          data: null
+        });
+      }
+
+      return res.status(200).json({
+        status: true,
+        message: 'Module update successfully',
+        data: null
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  destroy: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const deleted = await Module.destroy({ where: { id: id } });
+
+      if (!deleted) {
+        return res.status(404).json({
+          status: false,
+          message: `Module not found!`,
+          data: null
+        });
+      }
+
+      return res.status(200).json({
+        status: true,
+        message: 'Module deleted successfully',
+        data: null
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 };

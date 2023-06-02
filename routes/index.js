@@ -7,7 +7,6 @@ const employee = require('../controllers/employee');
 const rbac = require('../controllers/rbac');
 const enums = require('../utils/enum');
 const multer = require('multer')();
-const nodemailer = require('../utils/nodemailer');
 
 const middlewares = require('../utils/middlewares');
 
@@ -35,11 +34,15 @@ router.post('/auth/upload-profile', middlewares.auth, multer.single('profilePict
 router.post('/rbac/modules', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, true, false, false), rbac.modules.store);
 router.get('/rbac/modules', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, false, false, false), rbac.modules.index);
 router.get('/rbac/modules/:id', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, false, false, false), rbac.modules.show);
+router.put('/rbac/modules/:id', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, false, true, false), rbac.modules.update);
+router.delete('/rbac/modules/:id', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, false, false, true), rbac.modules.destroy);
 
 // role
 router.post('/rbac/roles', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, true, false, false), rbac.roles.store);
 router.get('/rbac/roles', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, false, false, false), rbac.roles.index);
 router.get('/rbac/roles/:id', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, false, false, false), rbac.roles.show);
+router.put('/rbac/roles/:id', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, false, true, false), rbac.roles.update);
+router.delete('/rbac/roles/:id', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, false, false, true), rbac.roles.destroy);
 
 // role access
 router.post('/rbac/roleaccess', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, true, false, false), rbac.roleaccess.store);

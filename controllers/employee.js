@@ -31,7 +31,7 @@ module.exports = {
       const employee = await Employee.create(employeeData);
 
       // Mengirim email aktivasi
-      const activationLink = `http://localhost:3000/auth/activate/${employee.id}`;
+      const activationLink = `${req.protocol}://${req.get('host')}/auth/activate/${employee.id}`;
 
       const html = `
         <h1>Account Activation</h1>
