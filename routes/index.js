@@ -19,9 +19,10 @@ router.get('/', (req, res, next) => {
 router.post('/auth/register', employee.register);
 router.post('/auth/login', employee.login);
 router.get('/auth/whoami', middlewares.auth, employee.whoami);
+router.get('/auth/oauth', employee.googleOauth2);
 router.get('/auth/show', employee.show);
 
-//* module                              read, write, update, delete
+// module
 router.post('/rbac/modules', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, true, false, false), rbac.modules.store);
 router.get('/rbac/modules', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, false, false, false), rbac.modules.index);
 router.get('/rbac/modules/:id', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, false, false, false), rbac.modules.show);

@@ -1,7 +1,8 @@
 const { Employee, Role } = require('../models');
-const bcryp = require('bcrypt');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET_KEY } = process.env;
+const oauth2 = require('../utils/oauth2');
 
 module.exports = {
   register: async (req, res) => {
@@ -17,7 +18,7 @@ module.exports = {
         });
       }
 
-      const hashPassword = await bcryp.hash(password, 10);
+      const hashPassword = await bcrypt.hash(password, 10);
       const employeeData = {
         name, email, password: hashPassword
       };
@@ -54,7 +55,15 @@ module.exports = {
         });
       }
 
-      const passwordCorrect = await bcryp.compare(password, employee.password);
+      if (employee.user_type == 'google' && !employee.password) {
+        return res.status(400).json({
+          status: false,
+          message: 'your accont is registered with google oauth, you need to login with google oauth2!',
+          data: null
+        });
+      }
+
+      const passwordCorrect = await bcrypt.compare(password, employee.password);
       if (!passwordCorrect) {
         return res.status(400).json({
           status: false,
@@ -90,6 +99,48 @@ module.exports = {
         status: true,
         message: 'fetch employee success!',
         data: req.employee
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  googleOauth2: async (req, res) => {
+    try {
+      const { code } = req.query;
+      if (!code) {
+        const googleLoginUrl = oauth2.generateAuthUrl();
+        return res.redirect(googleLoginUrl);
+      }
+
+      await oauth2.setCreadentials(code);
+      const { data } = await oauth2.getUserData();
+
+
+      let employee = await Employee.findOne({ where: { email: data.email } });
+      if (!employee) {
+        employee = await Employee.create({
+          name: data.name,
+          email: data.email,
+          role_id: 3,
+          user_type: 'google'
+        });
+      }
+
+      const payload = {
+        id: employee.id,
+        name: employee.name,
+        email: employee.email,
+        role_id: employee.role_id
+      };
+
+      const token = await jwt.sign(payload, JWT_SECRET_KEY);
+      return res.status(200).json({
+        status: true,
+        message: 'login success!',
+        data: {
+          token: token
+        }
       });
     } catch (error) {
       throw error;
