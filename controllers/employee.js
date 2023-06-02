@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { JWT_SECRET_KEY } = process.env;
 const oauth2 = require('../utils/oauth2');
 const imagekit = require('../utils/imagekit');
+const nodemailer = require('../utils/nodemailer');
 
 module.exports = {
   register: async (req, res) => {
@@ -28,9 +29,62 @@ module.exports = {
         employeeData.role_id = employeeRole.id;
       }
       const employee = await Employee.create(employeeData);
+
+      // Mengirim email aktivasi
+      const activationLink = `http://localhost:3000/auth/activate/${employee.id}`;
+
+      const html = `
+        <h1>Account Activation</h1>
+        <p>Hello ${employee.name}</p>
+        <p>Please click the following link to activate your account:</p>
+        <a href="${activationLink}" style="display: inline-block; padding: 10px 20px; background-color: green; color: white; text-decoration: none;">Activate Your Account</a>
+      `;
+
+      await nodemailer.sendMail(employee.email, 'Account Activation', html);
+
       return res.status(201).json({
         status: true,
-        message: 'employee created!',
+        message: 'User created! Please Check Your Email for Activate',
+        data: {
+          id: employee.id,
+          name: employee.name,
+          email: employee.email,
+          role_id: employee.role_id
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  activateAccount: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const employee = await Employee.findByPk(id);
+      if (!employee) {
+        return res.status(404).json({
+          status: false,
+          message: 'Employee not found!',
+          data: null
+        });
+      }
+
+      if (employee.isActivated) {
+        return res.status(400).json({
+          status: false,
+          message: 'Link expired, account already active!',
+          data: null
+        });
+      }
+
+      // Setel status akun menjadi "aktif"
+      employee.isActivated = true;
+      await employee.save();
+
+      return res.status(200).json({
+        status: true,
+        message: 'Account activated successfully',
         data: {
           id: employee.id,
           name: employee.name,
@@ -52,6 +106,14 @@ module.exports = {
         return res.status(400).json({
           status: false,
           message: 'credential is not valid!',
+          data: null
+        });
+      }
+
+      if (!employee.isActivated) {
+        return res.status(400).json({
+          status: false,
+          message: 'Your account is not activated!',
           data: null
         });
       }
@@ -164,9 +226,9 @@ module.exports = {
 
   uploadProfile: async (req, res) => {
     try {
-      const { id } = req.user; // Mengambil ID pengguna dari token
+      const { id } = req.user;
 
-      const employee = await Employee.findByPk(id); // Mengambil data pengguna berdasarkan ID
+      const employee = await Employee.findByPk(id);
 
       if (!employee) {
         return res.status(404).json({
@@ -185,7 +247,7 @@ module.exports = {
 
       // Memperbarui gambar profil pengguna
       employee.profilePicture = uploadFile.url;
-      await employee.save(); // Menyimpan perubahan pada data pengguna
+      await employee.save();
 
       return res.json({
         status: true,

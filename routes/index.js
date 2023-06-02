@@ -7,6 +7,7 @@ const employee = require('../controllers/employee');
 const rbac = require('../controllers/rbac');
 const enums = require('../utils/enum');
 const multer = require('multer')();
+const nodemailer = require('../utils/nodemailer');
 
 const middlewares = require('../utils/middlewares');
 
@@ -18,11 +19,14 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/auth/register', employee.register);
+router.get('/auth/activate/:id', employee.activateAccount);
+
 router.post('/auth/login', employee.login);
 router.get('/auth/whoami', middlewares.auth, employee.whoami);
 router.get('/auth/oauth', employee.googleOauth2);
-router.get('/auth/show', employee.show);
+router.get('/auth/show', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, false, false, false), employee.show);
 
+//* Upload Avatar for employee
 // bisa digunakan untuk upload profile atau update profile, tinggal memasukan gambar baru saja
 router.post('/auth/upload-profile', middlewares.auth, multer.single('profilePicture'), employee.uploadProfile);
 
