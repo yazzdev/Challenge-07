@@ -6,6 +6,7 @@ const products = require('./products');
 const employee = require('../controllers/employee');
 const rbac = require('../controllers/rbac');
 const enums = require('../utils/enum');
+const multer = require('multer')();
 
 const middlewares = require('../utils/middlewares');
 
@@ -21,6 +22,10 @@ router.post('/auth/login', employee.login);
 router.get('/auth/whoami', middlewares.auth, employee.whoami);
 router.get('/auth/oauth', employee.googleOauth2);
 router.get('/auth/show', employee.show);
+
+// bisa digunakan untuk upload profile atau update profile, tinggal memasukan gambar baru saja
+router.post('/auth/upload-profile', middlewares.auth, multer.single('profilePicture'), employee.uploadProfile);
+
 
 // module
 router.post('/rbac/modules', middlewares.auth, middlewares.rbac(enums.rbacModule.authorization, true, true, false, false), rbac.modules.store);

@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET_KEY } = process.env;
 const oauth2 = require('../utils/oauth2');
+const imagekit = require('../utils/imagekit');
 
 module.exports = {
   register: async (req, res) => {
@@ -159,5 +160,45 @@ module.exports = {
     } catch (error) {
       throw error;
     }
+  },
+
+  uploadProfile: async (req, res) => {
+    try {
+      const { id } = req.user; // Mengambil ID pengguna dari token
+
+      const employee = await Employee.findByPk(id); // Mengambil data pengguna berdasarkan ID
+
+      if (!employee) {
+        return res.status(404).json({
+          status: false,
+          message: 'Employee not found!',
+          data: null
+        });
+      }
+
+      const stringFile = req.file.buffer.toString('base64');
+
+      const uploadFile = await imagekit.upload({
+        fileName: req.file.originalname,
+        file: stringFile
+      });
+
+      // Memperbarui gambar profil pengguna
+      employee.profilePicture = uploadFile.url;
+      await employee.save(); // Menyimpan perubahan pada data pengguna
+
+      return res.json({
+        status: true,
+        message: 'Profile picture uploaded successfully',
+        data: {
+          id: employee.id,
+          name: employee.name,
+          email: employee.email,
+          profilePicture: employee.profilePicture
+        }
+      });
+    } catch (err) {
+      throw err;
+    }
   }
-};
+}
