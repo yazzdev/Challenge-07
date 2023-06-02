@@ -16,6 +16,7 @@ module.exports = {
         email: 'superadmin@mail.com',
         password: hashedPasswordSuperadmin,
         role_id: 1,
+        isActivated: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -24,6 +25,7 @@ module.exports = {
         email: 'admin@mail.com',
         password: hashedPasswordAdmin,
         role_id: 2,
+        isActivated: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
@@ -32,6 +34,7 @@ module.exports = {
         email: 'user@mail.com',
         password: hashedPasswordUser,
         role_id: 3,
+        isActivated: true,
         createdAt: new Date(),
         updatedAt: new Date()
       }

@@ -24,6 +24,10 @@ module.exports = {
       user_type: {
         type: Sequelize.STRING
       },
+      isActivated: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       profilePicture: {
         type: Sequelize.STRING
       },
