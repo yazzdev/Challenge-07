@@ -40,7 +40,12 @@ module.exports = {
         <a href="${activationLink}" style="display: inline-block; padding: 10px 20px; background-color: green; color: white; text-decoration: none;">Activate Your Account</a>
       `;
 
-      await nodemailer.sendMail(employee.email, 'Account Activation', html);
+      try {
+        await nodemailer.sendMail(employee.email, 'Account Activation', html);
+      } catch (error) {
+        // Handle email sending error
+        throw new Error('Failed to send activation email');
+      }
 
       return res.status(201).json({
         status: true,
